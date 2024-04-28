@@ -4,52 +4,186 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather forcast</title>
-  </head>
-  <body>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-  <style>
-body{
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+    rel="stylesheet"
+    />
+    <style>
+        body {
   background-color: beige;
- font-family: "Roboto", sans-serif;
-
+  font-family: "Roboto", sans-serif;
 }
-.app{
-  background: white;
+header {
+  border-bottom: 1px solid pink;
+  padding: 0 0 30px 0;
+}
+
+.app {
+  background: rgba(50, 100, 97, 0.08);
   max-width: 600px;
   margin: 45px auto;
-  box-shadow: 0 30px 50px rgba(65, 50, 100, 0.08) ;
+  box-shadow: 0 30px 50px rgba(65, 50, 100, 0.08);
   padding: 30px;
   border-radius: 10px;
 }
-  </style>
-  <body>
-    <div class="app">
-      <form >
-    <input type="search" placeholder="Enter a city..." required>
-        <input type="submit" value="search">
-</form>
-<header>
-  <main>
-    <div>
-    <h1>Paris</h1>
-      <p>Tuesday 14:18, scattered clouds
-        <br/>
-        Humidity:56%, wind:5.1 km/h
-      </p>
-    </div>
-    <div>⛅ 12°C</div>
-  </main>
+.search-input {
+  background-color: fuchsia;
+  border: none;
+  width: 80%;
+  font-size: 20px;
+  padding: 15px 20px;
+}
+.search-button {
+  background-color: fuchsia;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 20px;
+  margin-left: 6px;
+}
+footer {
+  border-top: 1px solid pink;
+  padding: 30px 0 0 0;
+  text-align: center;
+  font-size: 15px;
+  color: blueviolet;
+}
+a {
+  color: fuchsia;
+}
+.app-data {
+  display: flex;
+  justify-content: space-between;
+}
+main {
+  padding: 30px 0;
+}
+h1 {
+  margin: 0;
+  font-size: 40px;
+  line-height: 50px;
+}
+p {
+  font-size: 20px;
+  line-height: 22px;
+  color: blueviolet;
+}
+.temp {
+  font-size: 50px;
+}
+.percent {
+  color: fuchsia;
+}
+.km {
+  color: fuchsia;
+}
 
-     <footer>
-      coded by <a href="https://www.linkedin.com/in/indiphe-yonwaba-3b5966289?originalSubdomain=za"> Indiphe Yonwaba Nondlazi </a> on<a
-        href="https://github.com/Indiphe"
-      >
-        github
-      </a>
-      and hosted on
-      <a href="https://app.netlify.com/teams/indiphe/overview">netlify</a>
-    </footer>
-  </body>
+    </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+    <form id="search">
+      <input
+        type="search"
+        placeholder="Enter a city..."
+        required
+        class="search-input"
+        id="search-input"
+      />
+      <input type="submit" value="search" class="search-button" />
+    </form>
+  </header>
+      <main>
+        <div class="app-data">
+          <div >
+            <h1  id="city">paris</h1>
+            <p>
+              <span id="time">Tuesday 14:18</span>,<span id="description"
+                >scattered clouds
+              </span>
+              <br />
+              Humidity: <strong class="percent" id="humidity">56%</strong>,
+              wind:
+              <strong class="km" id="Windspeed">5.1 km/h</strong>
+            </p>
+          </div>
+          <div id="icon">
+        <img class="temp" src="https://openweathermap.org/img/wn/10d@2x.png">
+          </div>
+          <div id="temperature"> 25</span> <strong>°C</strong></div>
+        </div>
+      </main>
+
+      <footer>
+        Coded by
+        <a
+          href="https://www.linkedin.com/in/indiphe-yonwaba-3b5966289?originalSubdomain=za"
+        >
+          Indiphe Yonwaba Nondlazi
+        </a>
+        on<a href="https://github.com/Indiphe"> github </a>
+        and hosted on
+        <a href="https://app.netlify.com/teams/indiphe/overview">netlify</a>
+      </footer>
+      <script >function refreshweather(response) {
+  let temperatureElement = document.querySelector("#temperature");
+  let temperature = response.data.temperature.current;
+  let cityelement = document.querySelector("#city");
+  let descriptionelement = document.querySelector("#description");
+  let humidity = document.querySelector("#humidity");
+  let Windspeed = document.querySelector("#Windspeed");
+  let Time = document.querySelector("#time");
+  let date = new Date(response.date.time * 1000);
+  let icon = document.querySelector("#icon");
+
+  icon.innerHTML =
+    'img src= "${response.data.condition.icon_url}" class="temp"';
+
+  time.innerHTML = formatdate(date);
+  Windspeed.innerHTML = "${response.data.wind.speed}km/h";
+  humidity.innerHTML = "${response.data.temperature.humidity}%";
+  description.innerHTML = response.data.condition.description;
+  cityelement.innerHTML = response.data.city;
+  temperatureElement.innerHTML = Math.round(temperature);
+}
+function formatdate(date) {
+  let hours = date.getHours;
+  let minutes = date.getMinutes;
+  let days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  let day = dayd[date.getDay()];
+  return "${day},${hours}:${minutes}";
+}
+function searchcity(city) {
+  let apikey = "51t8c7a54baf34490b70f5dc7aco6f3d";
+  apiURL =
+    "https://api.shecodes.io/weather/v1/current?query=${city}&key=${apikey}&units=metric";
+  axios.get(apiURL).then(refreshweather);
+}
+function handleSearchSubmit(event) {
+  event.preventDefault();
+  let searchInput = document.querySelector("#search-input");
+
+  searchcity(searchInput.value);
+}
+
+let searchformelement = document.querySelector("#search");
+searchformelement.addEventListener("submit", handleSearchSubmit);
+searchcity("qumbu");
+</script>
+      </body>
+  </div>
 </html>
